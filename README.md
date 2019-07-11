@@ -1,5 +1,4 @@
-# docker-openstack-horizon
-
+# horizon-docker
 
 ## Synopsis
 
