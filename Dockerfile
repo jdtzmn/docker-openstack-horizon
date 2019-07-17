@@ -2,6 +2,7 @@ FROM ubuntu:18.04
 
 ENV HORIZON_BASEDIR=/etc/horizon \
     KEYSTONE_HOST='keystone' \
+    TOX_TESTENV_PASSENV=KEYSTONE_HOST \
     APACHE_RUN_USER=www-data \
     APACHE_RUN_GROUP=www-data \
     APACHE_PID_FILE=/var/run/apache2/apache2.pid \
@@ -19,7 +20,7 @@ RUN \
   apt-get install -y \
     memcached git python-pip python3 gettext \
     python3-dev python3-distutils && \
-  git clone --branch $VERSION --depth 1 https://github.com/openstack/horizon.git ${HORIZON_BASEDIR} && \
+  git clone --branch $VERSION --depth 1 https://opendev.org/openstack/horizon.git ${HORIZON_BASEDIR} && \
   cd ${HORIZON_BASEDIR} && \
   pip install tox
 
