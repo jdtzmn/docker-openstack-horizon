@@ -11,7 +11,7 @@ ENV HORIZON_BASEDIR=/etc/horizon \
     APACHE_LOCK_DIR=/var/lock/apache2 \
     APACHE_LOG_DIR=/var/log/apache2 \
     LANG=C \
-    VERSION=15.1.0
+    VERSION=master
 
 
 EXPOSE 80
