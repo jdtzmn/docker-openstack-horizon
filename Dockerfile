@@ -1,8 +1,9 @@
 FROM ubuntu:18.04
 
 ENV HORIZON_BASEDIR=/etc/horizon \
-    KEYSTONE_HOST='keystone' \
-    TOX_TESTENV_PASSENV=KEYSTONE_HOST \
+    OPENSTACK_HOST='keystone' \
+    KEYSTONE_URL='\"http://%s:5000/v3" % OPENSTACK_HOST' \
+    TOX_TESTENV_PASSENV='KEYSTONE_HOST KEYSTONE_URL' \
     APACHE_RUN_USER=www-data \
     APACHE_RUN_GROUP=www-data \
     APACHE_PID_FILE=/var/run/apache2/apache2.pid \
@@ -11,6 +12,7 @@ ENV HORIZON_BASEDIR=/etc/horizon \
     APACHE_LOG_DIR=/var/log/apache2 \
     LANG=C \
     VERSION=15.1.0
+
 
 EXPOSE 80
 
@@ -30,7 +32,9 @@ RUN \
   cp openstack_dashboard/local/local_settings.py.example openstack_dashboard/local/local_settings.py && \
   sed -i 's/^DEBUG.*/DEBUG = True/g' $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
   echo 'COMPRESS_ENABLED = False' >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
-  sed -i 's/^OPENSTACK_HOST.*/OPENSTACK_HOST = os\.getenv("KEYSTONE_HOST")/g' \
+  sed -i 's/^OPENSTACK_HOST.*/OPENSTACK_HOST = os\.getenv("OPENSTACK_HOST")/g' \
+    $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
+  sed -i 's/^OPENSTACK_KEYSTONE_URL.*/OPENSTACK_KEYSTONE_URL = os\.getenv("KEYSTONE_URL")/g' \
     $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
   printf  "\nALLOWED_HOSTS = ['*', ]\n" >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
   echo "SESSION_ENGINE = 'django.contrib.sessions.backends.cache'" \
